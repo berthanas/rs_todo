@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+
+    <link href="{% static "fullcalendar-4.4.0/packages/core/main.css" %}" rel='stylesheet'>
+    <link href="{% static "fullcalendar-4.4.0/packages/daygrid/main.css" %}" rel='stylesheet'>
+
+    <script src="{% static "fullcalendar-4.4.0/packages/core/main.js" %}"></script>
+    <script src="{% static "fullcalendar-4.4.0/packages/interaction/main.js" %}"></script>
+    <script src="{% static "fullcalendar-4.4.0/packages/daygrid/main.js" %}"></script>
+    <script src="{% static "fullcalendar-4.4.0/packages/core/locales/tr.js" %}"></script>
+    <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'tr',
+        plugins: [ 'interaction', 'dayGrid' ],
+        defaultDate: '{% now "Y-m-d" %}',
+        editable: true,
+        eventTextColor: '#fff',
+        eventColor: '#007bff',
+        eventLimit: true, // allow "more" link when too many events
+        events: [
+            {% for task in tasks %}
+                {
+                    title: "{{ task.task }}",
+                    start: '{{ task.dueDate|date:"Y-m-d" }}',
+                    {% if task.is_past_due %}color: '#dc3545',
+                    {% endif %}
+                },
+                {% endfor %}
+        ]
+        });
+
+        calendar.render();
+    });
+
+    </script>
+    <style>
+
+    #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    </style>
+    
+{% endblock head %}
+
+{% block body %}
+    <div id='calendar'></div>
+{% endblock body %}

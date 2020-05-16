@@ -1,0 +1,124 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg">
+            {% if not request.user.is_authenticated %}
+                <div class="container">
+                    <a href="{% url 'todo:loginUser' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Giriş Yap</a>
+                </div>
+    
+
+            {% else %}
+                
+                <h3>Görevler</h3><h5>Bugün <span class="badge badge-primary badge-pill">{{tasksToday.count}}</span> | 
+                Geçmiş <span class="badge badge-danger badge-pill">{{tasksExpired.count}}</span> | 
+                Bekleyen <span class="badge badge-info badge-pill">{{tasksDue.count}}</span> | 
+                Tamamlananlar <span class="badge badge-info badge-pill">{{tasksCompleted.count}}</span></h5>
+
+                <hr>
+                <a href="{% url 'todo:addTask' %}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Görev Ekle</a>
+                <hr>
+                
+                        
+                    <h4 class="alert-heading">Bugün - <span class="badge badge-primary badge-pill">{{tasksToday.count}}</span></h4>
+                    <p>
+                    {% for task in tasksToday %}
+                    <div class="list-group">
+                        <ul class="list-group">
+
+                            <li class="list-group-item list-group-item-primary">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ task.task }}</h5>
+                                    <small>Miat: {{ task.dueDate }}</small>
+                                    
+                                </div>
+                                <p class="mb-1">{{ task.details }}</p>
+                                <small>{{ task.assignedBy.get_full_name }} tarafından atandı</small>
+                                <p><a href="{% url 'todo:toggleStatus' task.id %}" class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">Tamamlandı</a>
+                                <a href="{% url 'todo:deleteTask' task.id %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Sil</a>
+                                <a href="{% url 'todo:updateTask' task.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Güncelle</a></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    {% endfor %}
+                    <br>
+                <h4 class="alert-heading">Geçmiş - <span class="badge badge-danger badge-pill">{{tasksExpired.count}}</span></h4>
+                    <p>
+                    {% for task in tasksExpired %}
+                    <div class="list-group">
+                        <ul class="list-group">
+
+                            <li class="list-group-item list-group-item-danger">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ task.task }}</h5>
+                                    <small>Miat: {{ task.dueDate }}</small>
+                                </div>
+                                <p class="mb-1">{{ task.details }}</p>
+                                <small>{{ task.assignedBy.get_full_name }} tarafından atandı</small>
+                                <p><a href="{% url 'todo:toggleStatus' task.id %}" class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">Tamamlandı</a>
+                                <a href="{% url 'todo:deleteTask' task.id %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Sil</a>
+                                <a href="{% url 'todo:updateTask' task.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Güncelle</a></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    {% endfor %}
+                    <br>
+                
+                <h4 class="alert-heading">Bekleyen - <span class="badge badge-info badge-pill">{{tasksDue.count}}</span></h4>
+                    <p>
+                    {% for task in tasksDue %}
+                    <div class="list-group">
+                        <ul class="list-group">
+
+                            <li class="list-group-item list-group-item-info">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ task.task }}</h5>
+                                    <small>Miat: {{ task.dueDate }}</small>
+                                </div>
+                                <p class="mb-1">{{ task.details }}</p>
+                                <small>{{ task.assignedBy.get_full_name }} tarafından atandı</small>
+                                <p><a href="{% url 'todo:toggleStatus' task.id %}" class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">Tamamlandı</a>
+                                <a href="{% url 'todo:deleteTask' task.id %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Sil</a>
+                                <a href="{% url 'todo:updateTask' task.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Güncelle</a></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    {% endfor %}
+                    <br>
+                    <h4 class="alert-heading">Tamamlananlar - <span class="badge badge-info badge-pill">{{tasksCompleted.count}}</span></h4>
+                    <p>
+                    {% for task in tasksCompleted %}
+                    <div class="list-group">
+                        <ul class="list-group">
+
+                            <li class="list-group-item list-group-item-success">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ task.task }}</h5>
+                                    <small>Miat: {{ task.dueDate }}</small>
+                                </div>
+                                <p class="mb-1"><del>{{ task.details }}</del></p>
+                                <small>{{ task.assignedBy.get_full_name }} tarafından atandı</small>
+                                <p><small>Tamamlanma Tarihi: {{ task.completedDate }}</small></p>
+                                <p><a href="{% url 'todo:toggleStatusNotCompleted' task.id %}" class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">Tamamlanmadı</a>
+                                <a href="{% url 'todo:deleteTask' task.id %}" class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Sil</a>
+                                <a href="{% url 'todo:updateTask' task.id %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Güncelle</a></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    {% endfor %}
+                
+            {% endif %}
+
+            
+        
+        </div>
+    </div>
+</div>
+{% endblock body %}
