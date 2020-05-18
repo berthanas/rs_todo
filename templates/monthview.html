@@ -17,11 +17,18 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'tr',
         plugins: [ 'interaction', 'dayGrid' ],
+        header: {
+            left: 'prevYear,prev,next,nextYear today',
+            center: 'title',
+            right: 'dayGridMonth,dayGridWeek,dayGridDay'
+        },
         defaultDate: '{% now "Y-m-d" %}',
+        navLinks: true,
         editable: true,
         eventTextColor: '#fff',
         eventColor: '#007bff',
         eventLimit: true, // allow "more" link when too many events
+        selectable: false,
         events: [
             {% for task in tasks %}
                 {

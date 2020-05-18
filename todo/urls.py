@@ -12,5 +12,6 @@ urlpatterns = [
     path('updateTask/<int:id>', views.updateTask, name='updateTask'),
     path('loginUser', views.loginUser, name='loginUser'),
     path('logoutUser', views.logoutUser, name='logoutUser'),
-    path('monthly', views.monthly, name='monthly')
+    path('monthly', views.monthly, name='monthly'),
+    path('listView', views.listView, name='listView')
 ]

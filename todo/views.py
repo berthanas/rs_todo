@@ -10,6 +10,7 @@ from datetime import date
 from django.contrib import messages
 
 # Create your views here.
+@login_required
 def addTask(request):
     form = TaskForm(request.POST or None)
     if form.is_valid():
@@ -17,6 +18,12 @@ def addTask(request):
         messages.success(request, "Görev başarı ile eklendi")
         return redirect("index")
     return render(request,"addTask.html",{'form':form})
+
+@login_required
+def listView(request):
+    tasks = Task.objects.all()
+    
+    return render(request, "listview.html", {"tasks":tasks})
 
 class TaskCreateView(CreateView):
     model = Task
@@ -79,6 +86,7 @@ def logoutUser(request):
     messages.success(request, "Çıkış Yapıldı...")
     return redirect("index") 
 
+@login_required
 def monthly(request):
     tasks = Task.objects.all()
     
